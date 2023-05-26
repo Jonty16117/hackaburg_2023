@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PASSWORD}
+    volumes:
+      - $MONGODB_LOCAL_STORAGE_PATH:/data/db
+
+  mongodb-admin:
+    image: mongo-express
+    container_name: mongodb-admin
+    ports:
+      - 8081:8081
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=${MONGODB_USER}
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=${MONGODB_PASSWORD}
+      - ME_CONFIG_BASICAUTH_USERNAME=${MONGO_DASHBOARD_LOGIN}
+      - ME_CONFIG_BASICAUTH_PASSWORD=${MONGO_DASHBOARD_PASSWORD}
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+    restart: always
+    depends_on:
+      - mongodb
+
+  backend:
+    build: ./backend
+    container_name: backend
+    restart: unless-stopped
+    env_file: ./.env
+    ports:
+      - $BACKEND_LOCAL_PORT:$BACKEND_DOCKER_PORT
+    environment:
+      - PORT=$BACKEND_DOCKER_PORT
+      - DBUSER=${MONGODB_USER}
+      - DBPASS=${MONGODB_PASSWORD}
+      - DBPATH=${MONGODB_LOCAL_STORAGE_PATH}
+      - NODE_ENV=$BACKEND_NODE_ENV
+      - MONGODB_URI_LOCAL=mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@mongodb:27017/db?authSource=admin&ssl=false
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - mongodb
