@@ -1,7 +1,8 @@
-FROM node:current-alpine3.16
+FROM node
+# FROM node:current-alpine3.16
 
 # update packages
-RUN apk update
+RUN apt update
 
 # create root application folder
 WORKDIR /app
@@ -28,3 +29,4 @@ WORKDIR /app
 
 # CMD [ "npm", "start" ]
 ENTRYPOINT [ "tail", "-f", "/dev/null" ]
+# ENTRYPOINT [ "npm", "start" ]
