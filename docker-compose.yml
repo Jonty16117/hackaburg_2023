@@ -41,6 +41,7 @@ services:
       - DBPASS=${MONGODB_PASSWORD}
       - DBPATH=${MONGODB_LOCAL_STORAGE_PATH}
       - NODE_ENV=$BACKEND_NODE_ENV
+      - ML_BACKEND_LOCAL_PORT=$ML_BACKEND_LOCAL_PORT
       - MONGODB_URI_LOCAL=mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@mongodb:27017/db?authSource=admin&ssl=false
     volumes:
       - ./backend:/app

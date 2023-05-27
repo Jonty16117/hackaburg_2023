@@ -1,20 +1,13 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Tue Nov 17 21:40:41 2020
-
-@author: win10
-"""
 
 # 1. Library imports
 import uvicorn
-from fastapi import FastAPI
-from fastapi import HTTPException
-from GBR_DTO import GBR_DTO
-from RFR_DTO import RFR_DTO
+from fastapi import File, FastAPI, UploadFile, HTTPException
 import numpy as np
-import pickle
+# import pickle
 import pandas as pd
 import joblib
+import os
 
 # 2. Create the app object
 app = FastAPI()
@@ -26,20 +19,11 @@ gbr_model_load = joblib.load('./model_files/gbr_model_noisy.joblib')
 rfr_model_load = joblib.load('./model_files/rfr_model_noisy.joblib')
 
 
-# 3. Index route, opens automatically on http://127.0.0.1:8000
 @app.get('/')
 def index():
     return {'message': 'Hello, World'}
 
-# 4. Route with a single parameter, returns the parameter within a message
-#    Located at: http://127.0.0.1:8000/AnyNameHere
-@app.get('/{name}')
-def get_name(name: str):
-    return {'Welcome ': f'{name}'}
-
-# 3. Expose the prediction functionality, make a prediction from the passed
-#    JSON data and return the predicted Bank Note with the confidence
-@app.post('/temp_rfr')
+@app.post('/predict_rfr')
 def predict_rfr(data: dict):
     try:
         features = [data.get('feature_c'), data.get('feature_ct'), data.get('feature_motorspeed'), data.get('ambient_temp'), data.get('car_speed'), data.get('soc')]
@@ -52,8 +36,8 @@ def predict_rfr(data: dict):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post('/temp_gbr')
-def predict_rfr(data: dict):
+@app.post('/predict_gbr')
+def predict_gbr(data: dict):
     try:
         features = [data.get('feature_c'), data.get('feature_ct'), data.get('feature_motorspeed'), data.get('ambient_temp'), data.get('car_speed'), data.get('soc')]
         features = pd.DataFrame([features], columns=['feature_c', 'feature_ct', 'feature_motorspeed', 'ambient_temp', 'car_speed', 'soc'])
@@ -64,6 +48,20 @@ def predict_rfr(data: dict):
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post('/predict_gbr_range')
+async def predict_gbr_range(file: UploadFile = File(...)):
+    try:
+        content = await file.read()
+        features = pd.read_parquet(content, engine='pyarrow')  # Assuming the file is in Parquet format
+        new_pred = gbr_model_load.predict(features)
+        print(new_pred[:10])
+        return {
+            'prediction': 123
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 # 5. Run the API with uvicorn
 #    Will run on http://127.0.0.1:8000

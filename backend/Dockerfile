@@ -28,5 +28,5 @@ WORKDIR /app
 # EXPOSE 3000
 
 # CMD [ "npm", "start" ]
-# ENTRYPOINT [ "tail", "-f", "/dev/null" ]
-ENTRYPOINT [ "npm", "run", "dev" ]
+ENTRYPOINT [ "tail", "-f", "/dev/null" ]
+# ENTRYPOINT [ "npm", "run", "dev" ]

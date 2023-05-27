@@ -1,7 +1,7 @@
 import requests
 import json
 
-url = "http://localhost:3002/temp_gbr"
+url = "http://localhost:3002/predict_gbr"
 data = {
   "feature_c": 1.23,
   "feature_ct": 4.56,
