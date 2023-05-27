@@ -20,7 +20,7 @@ WORKDIR /app
 # check files list
 # RUN ls -a
 
-# RUN npm install
+RUN npm install
 # RUN npm run build
 # RUN npm start
 
@@ -28,5 +28,5 @@ WORKDIR /app
 # EXPOSE 3000
 
 # CMD [ "npm", "start" ]
-ENTRYPOINT [ "tail", "-f", "/dev/null" ]
-# ENTRYPOINT [ "npm", "start" ]
+# ENTRYPOINT [ "tail", "-f", "/dev/null" ]
+ENTRYPOINT [ "npm", "start" ]

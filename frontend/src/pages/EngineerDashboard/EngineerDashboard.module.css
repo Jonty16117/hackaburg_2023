@@ -1,0 +1,15 @@
+.divider-col {
+    position: relative;
+    padding-right: 1px; /* Adjust the width of the divider line as needed */
+  }
+  
+  .divider-col::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 1px; /* Width of the divider line */
+    background-color: #000; /* Color of the divider line */
+  }
+  

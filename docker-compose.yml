@@ -58,3 +58,13 @@ services:
       - NODE_ENV=$FRONTEND_NODE_ENV
     volumes:
       - ./frontend:/app
+
+  ml_backend:
+    build: ./ml_backend
+    container_name: ml_backend
+    restart: unless-stopped
+    env_file: ./.env
+    ports:
+      - $ML_BACKEND_LOCAL_PORT:3002
+    volumes:
+      - ./ml_backend:/app

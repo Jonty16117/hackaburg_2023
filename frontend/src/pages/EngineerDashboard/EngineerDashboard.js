@@ -1,15 +1,20 @@
-import { Container, Row } from 'react-bootstrap';
+import { useState } from 'react';
+import { Container, Row, Col } from 'react-bootstrap';
+import styles from './EngineerDashboard.module.css'; // Import the CSS module file
+import ControlPart from './ControlPart/ControlPart';
+import ViewPart from './ViewPart/ViewPart';
+
 
 const EngineerDashboard = () => {
   return (
     <Container fluid className='pt-4'>
       <Row>
-        <div className="left-partition">
-          {/* Component for the left partition */}
-        </div>
-        <div className="right-partition">
-          {/* Component for the right partition */}
-        </div>
+        <Col className={styles['divider-col']}>
+          <ControlPart />
+        </Col>
+        <Col className={styles['divider-col']}>
+          <ViewPart />
+        </Col>
       </Row>
     </Container>
   );
