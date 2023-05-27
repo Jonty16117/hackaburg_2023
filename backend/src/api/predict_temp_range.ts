@@ -1,11 +1,11 @@
 import express, { Request, Response } from 'express';
 import axios from 'axios';
-import multer, { File } from 'multer';
+import multer from 'multer';
 
 const upload = multer();
 
 interface MulterRequest extends Request {
-  file: File;
+  file: Express.Multer.File;
 }
 
 const router = express.Router();

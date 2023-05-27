@@ -1,18 +1,36 @@
 import requests
-import json
+import os
+import pandas as pd
+import io
 
-url = "http://localhost:3002/predict_gbr"
-data = {
-  "feature_c": 1.23,
-  "feature_ct": 4.56,
-  "feature_motorspeed": 7.89,
-  "ambient_temp": 10.11,
-  "car_speed": 12.13,
-  "soc": 14.15
-}
-headers = {
-    "Content-Type": "application/json"
-}
+def test_predict_gbr_range() -> None:
+    url = 'http://0.0.0.0:3002/predict_gbr_range'
+    file_path = './model_files/target_temp.parquet'
 
-response = requests.post(url, data=json.dumps(data), headers=headers)
-print(response.json())
+    if not os.path.isfile(file_path):
+        print(f"File not found: {file_path}")
+        return
+
+    try:
+        # Read the file as bytes
+        with open(file_path, 'rb') as file:
+            file_bytes = file.read()
+
+        # Convert bytes to a file-like object
+        file_io = io.BytesIO(file_bytes)
+
+        # Attach the file-like object to the POST request
+        files = {'file': ('target_temp.parquet', file_io, 'application/octet-stream')}
+
+        response = requests.post(url, files=files)
+
+        if response.status_code == 200:
+            prediction = response.json()['prediction']
+            print('Prediction:', prediction)
+        else:
+            print('Error:', response.text)
+    except Exception as e:
+        print('An error occurred:', str(e))
+
+# Usage example
+test_predict_gbr_range()

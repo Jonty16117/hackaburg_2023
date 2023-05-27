@@ -10,3 +10,4 @@ uvloop
 httptools
 joblib==1.2.0
 python-multipart
+pyarrow
