@@ -5,7 +5,7 @@ import io
 
 def test_predict_gbr_range() -> None:
     url = 'http://0.0.0.0:3002/predict_gbr_range'
-    file_path = './model_files/target_temp.parquet'
+    file_path = './model_files/sample_data.parquet'
 
     if not os.path.isfile(file_path):
         print(f"File not found: {file_path}")
@@ -20,7 +20,7 @@ def test_predict_gbr_range() -> None:
         file_io = io.BytesIO(file_bytes)
 
         # Attach the file-like object to the POST request
-        files = {'file': ('target_temp.parquet', file_io, 'application/octet-stream')}
+        files = {'file': ('sample_data.parquet', file_io, 'application/octet-stream')}
 
         response = requests.post(url, files=files)
 

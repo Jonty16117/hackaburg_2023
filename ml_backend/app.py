@@ -56,10 +56,17 @@ def predict_rfr(data: dict):
 @app.post('/predict_gbr_range')
 async def predict_gbr_range(file: UploadFile = File(...)):
     try:
-        content = await file.read()
-        features = pd.read_parquet(content, engine='pyarrow')  # Assuming the file is in Parquet format
-        new_pred = gbr_model_load.predict(features)
-        print(new_pred[:10])
+        contents = await file.read()
+        with open(file.filename, "wb") as f:
+            f.write(contents)
+        # return {"filename": file.filename}
+        # print(1)
+        # content = await file.read()
+        # print(2)
+
+        # features = pd.read_parquet(content, engine='pyarrow')  # Assuming the file is in Parquet format
+        # new_pred = gbr_model_load.predict(features)
+        # print(new_pred[:10])
         return {
             'prediction': 123
         }
