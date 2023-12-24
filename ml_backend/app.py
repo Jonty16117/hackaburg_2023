@@ -8,6 +8,8 @@ import pickle
 import pandas as pd
 import joblib
 import os
+from fastapi.responses import FileResponse
+
 
 # 2. Create the app object
 app = FastAPI()
@@ -53,25 +55,24 @@ def predict_rfr(data: dict):
 #     except Exception as e:
 #         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post('/predict_gbr_range')
-async def predict_gbr_range(file: UploadFile = File(...)):
+@app.post('/predict_rfr_range')
+async def predict_rfr_range(file: UploadFile = File(...)):
     try:
         contents = await file.read()
-        with open(file.filename, "wb") as f:
+        # Save the file to disk
+        fileName = file.filename
+        with open(fileName, "wb") as f:
             f.write(contents)
-        # return {"filename": file.filename}
-        # print(1)
-        # content = await file.read()
-        # print(2)
+        
+        df = pd.read_parquet(fileName)
+        new_pred = rfr_model_load.predict(df)
+        df = pd.DataFrame({'prediction': new_pred})
+        df.to_csv('temp.csv', index=False)
 
-        # features = pd.read_parquet(content, engine='pyarrow')  # Assuming the file is in Parquet format
-        # new_pred = gbr_model_load.predict(features)
-        # print(new_pred[:10])
-        return {
-            'prediction': 123
-        }
+        # return FileResponse(fileName, filename="prediction.csv")
+        return 123
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+      raise HTTPException(status_code=500, detail=str(e))
 
 
 # 5. Run the API with uvicorn

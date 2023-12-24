@@ -19,4 +19,6 @@ running backend:
 connect to ec2 ssh:
 ssh -i /Users/jaswinderkantiwal/Downloads/ee-default-keypair.pem ubuntu@ec2-63-35-176-242.eu-west-1.compute.amazonaws.com
 
-scp -i /Users/jaswinderkantiwal/Downloads/ee-default-keypair.pem -r /path/to/local/folder ubuntu@ec2-63-35-176-242.eu-west-1.compute.amazonaws.com:/home/ubuntu
+
+
+scp -i /Users/jaswinderkantiwal/Downloads/ee-default-keypair.pem -r /Users/jaswinderkantiwal/Developer/hackaburg_2023.zip ubuntu@ec2-63-35-176-242.eu-west-1.compute.amazonaws.com:/home/ubuntu

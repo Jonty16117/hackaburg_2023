@@ -2,35 +2,33 @@ import requests
 import os
 import pandas as pd
 import io
+import joblib
 
-def test_predict_gbr_range() -> None:
-    url = 'http://0.0.0.0:3002/predict_gbr_range'
-    file_path = './model_files/sample_data.parquet'
+def test_predict_rfr_range() -> None:
+    fileName = "test_data.parquet"
+    rfr_model_load = joblib.load('./model_files/rfr_model_noisy.joblib')
 
-    if not os.path.isfile(file_path):
-        print(f"File not found: {file_path}")
-        return
+    # gbr_model_load = pickle.load(open('./model_files/gbr_model_noisy.pkl', 'rb'))
 
-    try:
-        # Read the file as bytes
-        with open(file_path, 'rb') as file:
-            file_bytes = file.read()
+    df = pd.read_parquet(fileName)
+    # df.reset_index(drop=True, inplace=True)
 
-        # Convert bytes to a file-like object
-        file_io = io.BytesIO(file_bytes)
+    # df.columns = range(df.shape[1])
+    # print(df.head())
 
-        # Attach the file-like object to the POST request
-        files = {'file': ('sample_data.parquet', file_io, 'application/octet-stream')}
+    # # Assuming the DataFrame is already defined as df
+    # df = df.iloc[1:].reset_index(drop=True)
 
-        response = requests.post(url, files=files)
+    # # Update column names
+    # df.columns = range(df.shape[1])
+    # print(df.head())
+    # print(df.head())
 
-        if response.status_code == 200:
-            prediction = response.json()['prediction']
-            print('Prediction:', prediction)
-        else:
-            print('Error:', response.text)
-    except Exception as e:
-        print('An error occurred:', str(e))
+    new_pred = rfr_model_load.predict(df)
+    print(new_pred)
+    df = pd.DataFrame({'prediction': new_pred})
+
+    df.to_csv('new_pred.csv', index=False)
 
 # Usage example
-test_predict_gbr_range()
+test_predict_rfr_range()

@@ -46,9 +46,9 @@ const ControlPart = () => {
         formData.append('file', selectedFile);
         formData.append('use_model', 123123123);
 
-        let url = 'http://localhost:3000/api/v1/predict_temp_range_gbr';
-        if (selectedOption === 'random_forest') {
-          url = 'http://localhost:3000/api/v1/predict_temp_range_rfr';
+        let url = 'http://localhost:3000/api/v1/predict_temp_range_rfr';
+        if (selectedOption === 'gradient_boosting') {
+          url = 'http://localhost:3000/api/v1/predict_temp_range_gbr';
         }
 
         axios

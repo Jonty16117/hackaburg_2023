@@ -2,7 +2,7 @@
 
 ## Run python env
 - python3 -m venv venv
-- source myvenv/bin/activate
+- source venv/bin/activate
 - deactivate
 
 ## Technologies used
